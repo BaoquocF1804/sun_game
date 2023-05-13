@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function pickUpSticks(n) {
+        if (n <= 2) {
+            return n;
+        }
+
+        let dp = new Array(n + 1);
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 2;
+        
+        for (let i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+        
+        return dp[n];
+        }
+
+        // Ví dụ sử dụng
+        console.log(pickUpSticks(5)); // Kết quả: 13
+        console.log(pickUpSticks(10)); // Kết quả: 274
+
+    </script>
+</body>
+</html>

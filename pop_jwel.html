@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function countExplodedGems(rows, cols, gems, hits) {
+  // Tạo ma trận grid để lưu trữ các gem
+  let grid = new Array(rows);
+  for (let i = 0; i < rows; i++) {
+    grid[i] = new Array(cols).fill(0);
+  }
+
+  // Đánh dấu các vị trí có gem trong grid
+  for (let gem of gems) {
+    let [i, j, color] = gem;
+    grid[i][j] = color;
+  }
+
+  // Hàm kiểm tra xem một vị trí có hợp lệ trong grid hay không
+  function isValid(i, j) {
+    return i >= 0 && i < rows && j >= 0 && j < cols;
+  }
+
+  // Hàm kiểm tra xem một gem có nổ được hay không
+  function isExplodable(i, j) {
+    return isValid(i, j) && grid[i][j] !== 0;
+  }
+
+  // Hàm kích nổ các gem liên kết với gem tại vị trí (i, j)
+  function explodeGems(i, j) {
+    if (!isValid(i, j) || grid[i][j] === 0) {
+      return 0;
+    }
+
+    let color = grid[i][j];
+    grid[i][j] = 0;
+    let count = 1;
+
+    // Kiểm tra các vị trí xung quanh để kích nổ gems
+    let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    for (let direction of directions) {
+      let newRow = i + direction[0];
+      let newCol = j + direction[1];
+      if (isExplodable(newRow, newCol) && grid[newRow][newCol] === color) {
+        count += explodeGems(newRow, newCol);
+      }
+    }
+
+    return count;
+  }
+
+  // Tính tổng số gems nổ sau các lần kích nổ
+  let explodedGems = 0;
+  for (let hit of hits) {
+    let [i, j] = hit;
+    if (grid[i][j] !== 0) {
+      explodedGems += explodeGems(i, j);
+    }
+  }
+
+  return explodedGems;
+}
+
+// Ví dụ sử dụng
+let rows = 7;
+let cols = 12;
+let gems = [[2, 6, 1],[0, 6, 1],[4, 6, 1],[4, 10, 2],[5, 8, 2],[2, 11, 2],[0, 7, 1],[2, 5, 1],[2, 7, 1],[5, 7, 1],[3, 8, 2],[5, 10, 2],[2, 4, 1],[0, 10, 2],[2, 9, 2],[0, 8, 2],[0, 9, 2],[3, 11, 2],[4, 5, 1],[1, 8, 2],[5, 5, 1],[3, 10, 2],[2, 2, 1],[4, 8, 2],[3, 6, 1],[1, 10, 2],[4, 9, 2],[5, 6, 1],[2, 8, 2],[3, 5, 1],[2, 3, 1],[2, 10, 2],[3, 7, 1],[4, 7, 1],[0, 5, 1]]
+let hits = [[3, 4]];
+
+console.log(countExplodedGems(rows, cols, gems, hits)); // Kết quả: 3
+
+    </script>
+</body>
+</html>
